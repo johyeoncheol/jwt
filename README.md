@@ -7,11 +7,30 @@
 
 ### Header
 
-> Signature를 해싱하기 위한 알고리즘 정보가 담여 있음
+> Signature를 해싱하기 위한 알고리즘 정보가 담겨 있음
 
 ### Payload
 
 > Payload는 서버와 클라이언트가 주고받는, 시스템에서 실제로 사용될 정보에 대한 내용들을 담고 있습니다.
+
+```
+{
+  "sub": "1",
+  "iss": "ori",
+  "exp": 1636989718,
+  "iat": 1636987918
+}
+```
+
+- payload에는 보통 Claim이라는 사용자에 대한, 혹은 토큰에 대한 property를 key-value의 형태로 저장
+
+- iss (Issuer) : 토큰 발급자
+- sub (Subject) : 토큰 제목 - 토큰에서 사용자에 대한 식별값이 됨
+- aud (Audience) : 토큰 대상자
+- exp (Expiration Time) : 토큰 만료 시간
+- nbf (Not Before) : 토큰 활성 날짜 (이 날짜 이전의 토큰은 활성화 되지 않음을 보장)
+- iat (Issued At) : 토큰 발급 시간
+- jti (JWT Id) : JWT 토큰 식별자 (issuer가 여러명일 때 이를 구분하기 위한 값)
 
 ### Signature
 
@@ -60,3 +79,12 @@ jwt:
 - doFilter는 토큰의 인증정보를 SecurityContext에 저장하는 역활 수행
 
 - RequestHeader에서 토큰 정보를 꺼내오기 위한 resolveToken 메소드 추가
+
+### CreateToken
+
+- signWith : 위에서 이야기한 개인키를 가지고 HS512 암호화 알고리즘으로 header와 payload로 Signature를 생성.
+- setHeaderParam : header에 typ로 JWT 지정
+- setSubject : 이후 JWT로 인증할 식별자를 user 객체의 id로 지정
+- setIssuer : JWT 발급자 지정
+- setExpiration : 현재 시간으로부터 지정된 accessTime만큼의 만료시간 지정
+- setIssueAt : JWT를 발급한 시간 지정
